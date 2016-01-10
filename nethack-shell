@@ -1,0 +1,3 @@
+#/usr/bin/bash
+export NETHACKOPTIONS="name=$1"
+exec /opt/nethack/games/nethack

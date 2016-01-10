@@ -19,8 +19,7 @@ def reserve():
     key = ''.join(fold_base64(key))
     nym = ''.join([c for c in request.form['nym'].strip() if c.isalnum()])
     authed_keys = open(os.path.expanduser('~/.ssh/authorized_keys'), 'a')
-    authed_keys.write("command=\"nethack-shell
-        %s\",no-port-forwarding,no-x11-forwarding %s %s\n"%(nym, algo, key))
+    authed_keys.write("command=\"/opt/nethack/webapp/nethackers/nethack-shell %s\",no-port-forwarding,no-x11-forwarding %s %s\n"%(nym, algo, key))
     print("Registered %s with key %s"%(nym, key))
     return render_template('registered.html')
 
