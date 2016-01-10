@@ -3,7 +3,7 @@ import os.path
 
 def fold_base64(s):
     return [c for c in s if c.isalnum() or c == '/' or c == '=' or c == '-' or
-        c==' ']
+        c==' ' or c=='+']
 
 app = Flask(__name__)
 
@@ -13,13 +13,13 @@ def index():
 
 @app.route('/', methods=['POST'])
 def reserve():
-    key = ''.join(fold_base64(request.form['key'].strip()))
+    tokens = request.form['key'].strip().split(' ', 2)
+    algo = tokens[0]
+    key = tokens[1]
+    key = ''.join(fold_base64(key))
     nym = ''.join([c for c in request.form['nym'].strip() if c.isalnum()])
     authed_keys = open(os.path.expanduser('~/.ssh/authorized_keys'), 'a')
-    authed_keys.write("\n")
-    authed_keys.write(key)
-    authed_keys.write(" ")
-    authed_keys.write("command=\"nethack-shell %s\""%(nym))
+    authed_keys.write("%s %s command=\"nethack-shell %s\"\n"%(algo, key, nym))
     print("Registered %s with key %s"%(nym, key))
     return render_template('registered.html')
 
